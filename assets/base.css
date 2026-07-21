@@ -1,0 +1,196 @@
+/* ==========================================================================
+   FREEZER FUEL — shared neo-brutalist / grunge design system
+   Fonts are injected ABOVE this block by the app (@font-face, base64).
+   Font roles:
+     Superglue     -> --f-mega   giant mastheads, big numbers
+     Violent Brave -> --f-gothic grunge section labels / headers
+     Comangs       -> --f-cond   meal titles, chips
+     Messy Melted  -> --f-melt   "sweet one" / distressed accents
+     Cyasren       -> --f-tag    tiny eroded kickers / tags
+     Ophium        -> --f-fancy  decorative accent
+     Courbe Sans   -> --f-body   ALL body / running text / UI
+   Rules honoured: no soft shadows (sharp offset only), no ruled lines inside
+   boxes, not everything boxed, layouts vary per section, shapes + symbols,
+   only the provided fonts.
+   ========================================================================== */
+
+:root{
+  --ink:#141210;
+  --paper:#f2e6c9;
+  --paper2:#e9d9b3;
+  --blue:#2338d4;
+  --navy:#161a3d;
+  --yellow:#f5c531;
+  --red:#e33a2c;
+  --pink:#ec5aa1;
+  --cream:#fbf4e2;
+
+  --f-mega:'Superglue',Impact,sans-serif;
+  --f-gothic:'Violent Brave',serif;
+  --f-cond:'Comangs',sans-serif;
+  --f-melt:'Messy Melted',serif;
+  --f-tag:'Cyasren',monospace;
+  --f-fancy:'Ophium',serif;
+  --f-body:'Courbe Sans',system-ui,sans-serif;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:18px;
+  line-height:1.5;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ---- grunge overlays: paper grain + xerox noise (fixed, non-interactive) ---- */
+body::before{           /* halftone dot grain */
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:9;
+  background-image:radial-gradient(rgba(20,18,16,.55) .7px,transparent .8px);
+  background-size:6px 6px;opacity:.12;
+}
+body::after{            /* fractal xerox noise */
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:9;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  mix-blend-mode:multiply;opacity:.6;
+}
+
+/* ---- SVG turbulence filters for hand-torn / rough ink edges ---- */
+.fx{position:absolute;width:0;height:0;overflow:hidden}
+
+/* ==== layout scaffold ==== */
+.zine{position:relative;z-index:1}
+.band{position:relative;padding:46px 0;overflow:hidden}
+.band.blue{background:var(--blue);color:var(--cream)}
+.band.navy{background:var(--navy);color:var(--cream)}
+.band.red{background:var(--red);color:var(--cream)}
+.band.yellow{background:var(--yellow);color:var(--ink)}
+.band.paper2{background:var(--paper2)}
+.wrap{max-width:1060px;margin:0 auto;padding:0 26px;position:relative;z-index:2}
+
+/* diagonal band edges = brutalist energy */
+.band.slash-top{clip-path:polygon(0 3%,100% 0,100% 100%,0 100%)}
+.band.slash-bot{clip-path:polygon(0 0,100% 0,100% 97%,0 100%)}
+
+/* ==== typography roles ==== */
+.mega{font-family:var(--f-mega);line-height:.9;text-transform:uppercase;letter-spacing:.01em}
+.gothic{font-family:var(--f-gothic);line-height:1}
+.cond{font-family:var(--f-cond)}
+.melt{font-family:var(--f-melt)}
+.tag{font-family:var(--f-tag);letter-spacing:.14em;text-transform:uppercase}
+.fancy{font-family:var(--f-fancy)}
+h1,h2,h3,h4{margin:0}
+
+/* ==== hard SHARP shadows only (no blur, ever) ==== */
+.sh   {box-shadow:6px 6px 0 var(--ink)}
+.sh-lg{box-shadow:10px 10px 0 var(--ink)}
+.sh-b {box-shadow:8px 8px 0 var(--blue)}
+.sh-r {box-shadow:8px 8px 0 var(--red)}
+.sh-y {box-shadow:8px 8px 0 var(--yellow)}
+.txt-sh   {text-shadow:5px 5px 0 var(--red),9px 9px 0 var(--blue)}
+.txt-sh-y {text-shadow:4px 4px 0 var(--ink)}
+.txt-sh-k {text-shadow:5px 5px 0 var(--ink)}
+
+/* tilts */
+.t-l{transform:rotate(-2.2deg)}.t-l2{transform:rotate(-4deg)}
+.t-r{transform:rotate(2.2deg)} .t-r2{transform:rotate(4deg)}
+.t-r3{transform:rotate(6deg)}
+
+/* ==== cards / panels ==== */
+.card{background:var(--cream);border:3px solid var(--ink);padding:22px 22px 24px;position:relative}
+.card.on-dark{background:var(--cream);color:var(--ink)}
+.panel{border:3px solid var(--ink);padding:26px;position:relative}
+
+/* rough hand-inked border (torn edge) applied to .rough elements */
+.rough{position:relative;border:none}
+.rough::before{content:"";position:absolute;inset:-6px;border:3px solid var(--ink);
+  filter:url(#wob);pointer-events:none;border-radius:2px}
+.rough.b::before{border-color:var(--blue);filter:url(#wob2)}
+.rough.r::before{border-color:var(--red);filter:url(#wob3)}
+
+/* ==== stickers / chips (rotated, not everything in a box) ==== */
+.sticker{display:inline-block;background:var(--cream);border:3px solid var(--ink);
+  padding:8px 14px;box-shadow:5px 5px 0 var(--ink);font-family:var(--f-cond)}
+.chip{display:inline-block;font-family:var(--f-tag);font-size:13px;letter-spacing:.12em;
+  text-transform:uppercase;background:var(--cream);color:var(--ink);
+  border:2.5px solid var(--ink);padding:6px 11px;box-shadow:3px 3px 0 var(--ink)}
+.chip.blue{background:var(--blue);color:var(--cream)}
+.chip.red{background:var(--red);color:var(--cream)}
+.chip.yellow{background:var(--yellow)}
+.chip.pink{background:var(--pink);color:var(--ink)}
+
+/* ==== starbursts / shapes (symbols, unconventional forms) ==== */
+.burst{--pt:16;display:grid;place-items:center;text-align:center;
+  clip-path:polygon(100% 50%,79% 62%,89% 84%,65% 79%,58% 100%,50% 79%,
+    35% 96%,32% 72%,8% 74%,24% 55%,3% 44%,27% 40%,17% 17%,40% 27%,45% 3%,
+    56% 25%,77% 11%,73% 36%,97% 33%,80% 50%);
+  background:var(--yellow);border:0;color:var(--ink)}
+.burst.blue{background:var(--blue);color:var(--cream)}
+.burst.red{background:var(--red);color:var(--cream)}
+.burst.pink{background:var(--pink)}
+.burst.navy{background:var(--navy);color:var(--cream)}
+.burst.cream{background:var(--cream);color:var(--ink)}
+.blob{background:var(--pink);border:3px solid var(--ink);
+  display:grid;place-items:center;text-align:center;
+  border-radius:64% 36% 55% 45% / 52% 44% 56% 48%}
+
+/* zigzag divider (a shape, not a ruled line) */
+.zig{height:20px;width:100%;
+  background:linear-gradient(135deg,var(--ink) 25%,transparent 25%) -12px 0,
+             linear-gradient(225deg,var(--ink) 25%,transparent 25%) -12px 0;
+  background-size:24px 24px;background-repeat:repeat-x}
+/* checkerboard strip */
+.checker{height:22px;width:100%;
+  background-image:linear-gradient(45deg,var(--ink) 25%,transparent 25%),
+    linear-gradient(-45deg,var(--ink) 25%,transparent 25%),
+    linear-gradient(45deg,transparent 75%,var(--ink) 75%),
+    linear-gradient(-45deg,transparent 75%,var(--ink) 75%);
+  background-size:22px 22px;background-position:0 0,0 11px,11px -11px,-11px 0}
+
+/* free-floating scatter dots */
+.dotfield{position:absolute;inset:0;pointer-events:none;opacity:.9;
+  background-image:radial-gradient(var(--ink) 3px,transparent 3.5px);
+  background-size:34px 34px}
+
+/* ==== section label (grunge, underlined by a SHAPE not a rule) ==== */
+.seclbl{font-family:var(--f-gothic);font-size:clamp(34px,6vw,64px);line-height:.92;
+  display:inline-block;position:relative;transform:rotate(-1.6deg)}
+.seclbl .hl{background:var(--yellow);box-shadow:5px 5px 0 var(--ink);
+  padding:2px 12px;display:inline-block}
+.kick{font-family:var(--f-tag);font-size:13px;letter-spacing:.24em;text-transform:uppercase}
+
+/* highlight run (marker swipe) */
+.mark{background:linear-gradient(180deg,transparent 42%,var(--yellow) 42% 92%,transparent 92%);
+  padding:0 .1em}
+
+/* ==== macro / stat badges ==== */
+.stat{font-family:var(--f-mega);line-height:.82;text-transform:uppercase}
+.statnum{font-family:var(--f-mega);font-size:clamp(40px,8vw,84px);line-height:.8}
+
+/* ==== list without ruled lines (rule 4) ==== */
+ul.clean{list-style:none;margin:8px 0 0;padding:0}
+ul.clean li{position:relative;padding-left:26px;margin:7px 0;font-size:17px}
+ul.clean li::before{content:"";position:absolute;left:0;top:.45em;width:12px;height:12px;
+  background:var(--blue);transform:rotate(45deg)}
+ul.clean.r li::before{background:var(--red)}
+ul.clean.y li::before{background:var(--yellow);border:2px solid var(--ink)}
+
+/* ==== responsive helpers ==== */
+.row{display:flex;flex-wrap:wrap;gap:22px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:30px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media(max-width:760px){
+  .grid2,.grid3,.grid4{grid-template-columns:1fr}
+  .wrap{padding:0 18px}
+  body{font-size:17px}
+}
+
+/* small util */
+.center{text-align:center}
+.stampbox{display:inline-block;border:3px dashed var(--ink);padding:6px 12px;
+  font-family:var(--f-tag);letter-spacing:.1em;transform:rotate(-3deg)}
