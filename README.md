@@ -1,38 +1,75 @@
-# Freezer Fuel — Meal-Prep Zines
+# FREEZER FUEL · meal-prep zines
 
-A single Streamlit app that bundles three 7-day meal-prep zines and lets you
-switch between them from the sidebar. All three share the same rules:
-high-protein, freeze-friendly, nut-free, and dirt cheap with ingredients you
-can find in small Brazilian cities.
+Four 7-day meal-prep zines in a grunge / neo-brutalist style, served by a small
+Streamlit app. Every zine is high-protein, freeze-friendly, dirt cheap — and
+**nut-free & sardine-free** top to bottom.
 
-| # | Plan | Calories | Cost |
-|---|------|----------|------|
-| 001 | Freezer Fuel (chicken · sardine · eggs) | ~1,600 kcal/day | ~R$185/wk |
-| 002 | Dirt Cheap Deluxe (soy protein · liver · eggs) | ~1,450 kcal/day | ~R$121/wk |
-| 003 | GRIT — the lean cut (chicken · soy · eggs) | ~1,300 kcal/day | ~R$127/wk |
+## The four plans
 
-Each zine is embedded in `streamlit_app.py` as base64-encoded HTML, so the app
-is fully self-contained — no extra files are required to run it.
+| # | Zine | Base | kcal/day | ~Cost/week |
+|---|------|------|----------|-----------|
+| 001 | Freezer Fuel | chicken · ground beef · eggs | 1,500 | R$166 |
+| 002 | Dirt Cheap Deluxe | soy protein (PTS) · liver · eggs | 1,450 | R$121 |
+| 003 | GRIT (lean cut) | chicken · soy · eggs | 1,300 | R$127 |
+| 004 | Sem Repetir (no-repeat) | 7 rotating dinners + 7 sweets | ~1,500 | ~R$180 |
+
+Every zine also has a **MIX IT UP** section with drop-in swaps, so no two weeks
+have to taste the same. 004 goes further: a different dinner and dessert every
+night of the week, plus breakfast/lunch pools you assemble yourself.
+
+> Note: 003 (GRIT) is an aggressive 1,300 kcal cut — eat all four meals, keep
+> water up, and treat it as a short stretch, not a lifestyle.
 
 ## Run locally
+
 ```bash
 pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-## Deploy to Streamlit Community Cloud
-1. Push this repo to GitHub (at minimum `streamlit_app.py` and `requirements.txt`).
-2. Go to https://share.streamlit.io , connect the repo, and set the main file to
-   `streamlit_app.py`.
-3. Deploy.
+## Deploy on Streamlit Community Cloud
 
-## Tweaks
-- Each plan's render height is set by its `"height"` value in the `ZINES` dict
-  inside `streamlit_app.py` — raise or lower it if a zine shows a gap or an
-  inner scrollbar on your screen.
-- The sidebar has a **Download** button that saves the selected zine as a
-  standalone `.html` file.
+Push this whole folder to a GitHub repo and point Streamlit Cloud at
+`streamlit_app.py`. No secrets, no extra config — the app only reads local
+files.
 
-> Note: the 1,300-kcal plan (GRIT) is an aggressive cut. Eat all four meals,
-> keep water up, and check in with a nutritionist if you run it more than a few
-> weeks.
+## How it's put together
+
+```
+streamlit_app.py    app: zine picker, inline render, .html download
+build_zines.py      generator — edit meal data here, run to regenerate zines/
+_preview.py         writes standalone preview HTML (same composition as the app)
+assets/base.css     shared neo-brutalist design system
+zines/00X.html      generated zine bodies (HTML fragments)
+fonts/              the 7 provided fonts + their licenses
+```
+
+At run time the app inlines all seven fonts as base64 `@font-face` rules and
+prepends the shared CSS, so the **downloaded .html files are fully
+self-contained** — they work offline, no font files needed.
+
+One quirk handled for you: Courbe Sans ships *empty* glyphs for `—`, `–`, `•`
+and `·`, so a supplemental `@font-face` with a `unicode-range` serves just
+those four codepoints from Comangs (also a provided font). Only the seven
+provided fonts are ever used.
+
+### Design system (rules.txt)
+
+- Vibrant blue / yellow / red palette on aged paper, grain + xerox noise
+- Sharp offset shadows only — no soft shadows anywhere
+- Every section has its own layout: starburst stat badges, tilted cards,
+  torn-edge panels, week grids, checklists — not a "document"
+- No ruled lines inside writing areas; clean diamond bullets instead
+- Grunge section labels (Violent Brave) + heavy mastheads (Superglue)
+- Hand-drawn SVG doodles throughout
+
+### Editing the meal plans
+
+All meal data lives as plain Python structures in `build_zines.py`. Change
+what you want, then:
+
+```bash
+python3 build_zines.py
+```
+
+and the zines regenerate. The app picks them up on next reload.
